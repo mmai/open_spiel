@@ -62,3 +62,13 @@ Package.resolved
 # Visual Studio generated files
 open_spiel/.vs
 /.env
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
