@@ -79,6 +79,8 @@ set(PYTHON_BINDINGS ${PYTHON_BINDINGS}
   pybind11/games_trade_comm.h
   pybind11/game_transforms.cc
   pybind11/game_transforms.h
+  pybind11/games_trictrac.cc
+  pybind11/games_trictrac.h
   pybind11/observer.cc
   pybind11/observer.h
   pybind11/policy.cc
