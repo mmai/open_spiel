@@ -33,22 +33,6 @@
 namespace open_spiel {
 namespace trictrac {
 
-inline constexpr const int kNumPlayers = 2;
-inline constexpr const int kNumChanceOutcomes = 36;
-inline constexpr const int kNumPoints = 24;
-inline constexpr const int kNumDiceOutcomes = 6;
-inline constexpr const int kXPlayerId = 0;
-inline constexpr const int kOPlayerId = 1;
-inline constexpr const int kPassPos = -1;
-inline constexpr const int kNumCheckersPerPlayer = 15;
-inline constexpr const int kBarPos = 100;
-inline constexpr const int kScorePos = 101;
-inline constexpr const int kNumDistinctActions = 1352;
-inline constexpr const int kBoardEncodingSize = 4 * kNumPoints * kNumPlayers;
-inline constexpr const int kStateEncodingSize =
-    3 * kNumPlayers + kBoardEncodingSize + 2;
-inline constexpr bool kDefaultSchoolsEnabled = false;
-
 enum class GameStage {
   kPreGame,
   kInGame,
@@ -82,27 +66,6 @@ struct CheckerMove {
   bool operator<(const CheckerMove& rhs) const {
     return (pos * 6 + (num - 1)) < (rhs.pos * 6 + rhs.num - 1);
   }
-};
-
-// This is a small helper to track historical turn info not stored in the moves.
-// It is only needed for proper implementation of Undo.
-struct TurnHistoryInfo {
-  int player;
-  int prev_player;
-  std::vector<int> dice;
-  Action action;
-  bool double_turn;
-  bool first_move_hit;
-  bool second_move_hit;
-  TurnHistoryInfo(int _player, int _prev_player, std::vector<int> _dice,
-                  int _action, bool _double_turn, bool fmh, bool smh)
-      : player(_player),
-        prev_player(_prev_player),
-        dice(_dice),
-        action(_action),
-        double_turn(_double_turn),
-        first_move_hit(fmh),
-        second_move_hit(smh) {}
 };
 
 class TrictracGame;
