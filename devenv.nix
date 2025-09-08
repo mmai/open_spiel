@@ -12,6 +12,5 @@
 
   packages = [
     pkgs.clang
-    # pkgs.virtualenv
   ];
 }
