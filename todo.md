@@ -17,7 +17,7 @@ L'application ligne de commande est implémentée dans 'trictrac/client_cli', el
 
 ## Plan d'action
 
-Dans un premier temps je voudrais que dans le dossier open_spiel/open_spiel/games/trictrac tu fasse une adaptation en c++ des fichiers de ma version rust des règles du trictrac trictrac/store. On verra dans un second temps comment correctement utiliser cette bibliothèque au sein d'Open Spiel.
+Dans un premier temps je voudrais que dans le dossier open_spiel/open_spiel/games/trictrac tu fasse une adaptation en c++ des fichiers de trictrac/store, ma version rust des règles du trictrac. On verra dans un second temps comment correctement utiliser cette bibliothèque au sein d'Open Spiel.
 
 - suis les conventions C++ de Google <https://google.github.io/styleguide/cppguide.html>
 - adapte les fichiers dans cet ordre de préférence : player.rs, dice.rs, board.rs, game_rules_moves.rs, game_rules_points.rs, game.rs
