@@ -74,6 +74,9 @@ class Board {
   // Checks if a quarter is still possible to be filled.
   bool IsQuarterFillable(Color color, int field) const;
 
+  // Returns a string representation of the board.
+  std::string ToString() const;
+
   // For testing: sets the board positions directly.
   void SetPositions(const std::array<int, 24>& positions);
 

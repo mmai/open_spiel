@@ -70,8 +70,21 @@ Player TrictracState::CurrentPlayer() const {
 }
 
 std::string TrictracState::ToString() const {
-  // Basic string representation for debugging.
-  return "TrictracState()"; // TODO: Implement a proper ToString
+  std::stringstream ss;
+  const TrictracPlayer& current_p = (current_player_ == Player::kPlayer0) ? player0_ : player1_;
+  const TrictracPlayer& opponent_p = (current_player_ == Player::kPlayer0) ? player1_ : player0_;
+
+  ss << "Current Player: " << current_p.GetName() << " (holes: " << current_p.holes << ", points: " << current_p.points << ")\n";
+  ss << "Opponent: " << opponent_p.GetName() << " (holes: " << opponent_p.holes << ", points: " << opponent_p.points << ")\n";
+
+  if (needs_roll_) {
+    ss << "Dice: Needs roll\n";
+  } else {
+    ss << "Dice: " << current_dice_.ToString() << "\n";
+  }
+
+  ss << board_.ToString();
+  return ss.str();
 }
 
 bool TrictracState::IsTerminal() const {

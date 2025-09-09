@@ -15,17 +15,9 @@ L'application ligne de commande est implémentée dans 'trictrac/client_cli', el
 'trictrac/client_cli/src/game_runner.rs' contient la logique permettant de faire jouer deux bots l'un contre l'autre.
 'trictrac/bot/src/strategy/default.rs' contient le code d'une stratégie de bot basique : il détermine la liste des mouvements valides (avec la méthode get_possible_moves_sequences de store::MoveRules) et joue simplement le premier de la liste.
 
-## Plan d'action
+## Etat d'avancement
 
-Dans un premier temps je voudrais que dans le dossier open_spiel/open_spiel/games/trictrac tu fasse une adaptation en c++ des fichiers de trictrac/store, ma version rust des règles du trictrac. On verra dans un second temps comment correctement utiliser cette bibliothèque au sein d'Open Spiel.
-
-- suis les conventions C++ de Google <https://google.github.io/styleguide/cppguide.html>
-- adapte les fichiers dans cet ordre de préférence : player.rs, dice.rs, board.rs, game_rules_moves.rs, game_rules_points.rs, game.rs
-
----
-
-J'ai terminé l'adaptation de tous les fichiers Rust du dossier trictrac/store en C++ dans le dossier
-forks/open_spiel/open_spiel/games/trictrac.
+Dans une précédente session tu as commencé à faire l'adaptation de ma version rust (trictrac/store) en c++ dans le dossier open_spiel/open_spiel/games/trictrac.
 
 Voici les fichiers créés :
 
@@ -37,8 +29,8 @@ Voici les fichiers créés :
 - trictrac.h / .cc (depuis game.rs, implémentant les classes TrictracGame et TrictracState pour Open
   Spiel)
 
-La structure de base est maintenant en place. Pour les parties les plus complexes comme la génération des
-coups et le calcul des points, j'ai mis en place une structure fonctionnelle avec des implémentations
-simplifiées qui pourront être détaillées par la suite.
+La structure est en place mais beaucoup de choses restent à implémenter.
 
-La première étape de votre plan est terminée. Quelle est la suite ?
+## Plan d'action
+
+Commence par implémenter la méthode TrictracState::toString du fichier forks/open_spiel/open_spiel/games/trictrac/trictrac.cc en reprenant la logique de l'implémentation fmt::Display pour GameState du fichier trictrac/store/src/game.rs
