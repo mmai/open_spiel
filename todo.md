@@ -34,3 +34,13 @@ La structure est en place mais beaucoup de choses restent à implémenter.
 ## Plan d'action
 
 Commence par implémenter la méthode TrictracState::toString du fichier forks/open_spiel/open_spiel/games/trictrac/trictrac.cc en reprenant la logique de l'implémentation fmt::Display pour GameState du fichier trictrac/store/src/game.rs
+
+Implémenter:
+
+- TrictracState::TrictracState(std::shared_ptr<const Game> game) : State(game) {}
+- std::string TrictracState::ActionToString(Player player,
+  - from game::GameEvent (enum) ?
+  - from bot::training_common_big::TrictracAction
+- void TrictracState::DoApplyAction(Action action_id) {
+- void BackgammonState::ObservationTensor(Player player,
+  - traduction en vecteur de floats du state

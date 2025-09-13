@@ -20,28 +20,30 @@
 #include <string>
 #include <vector>
 
-#include "open_spiel/spiel.h"
 #include "open_spiel/games/trictrac/trictrac_board.h"
 #include "open_spiel/games/trictrac/trictrac_dice.h"
 #include "open_spiel/games/trictrac/trictrac_player.h"
+#include "open_spiel/spiel.h"
 
 namespace open_spiel {
 namespace trictrac {
 
 // Constants
-constexpr int kNumPlayers = 2;
-constexpr int kNumHolesToWin = 12;
+inline constexpr int kNumPlayers = 2;
+inline constexpr const int kNumChanceOutcomes = 36;
+inline constexpr int kNumHolesToWin = 12;
 
 class TrictracGame;
 
 // State of a Trictrac game.
 class TrictracState : public State {
- public:
+public:
   TrictracState(std::shared_ptr<const Game> game);
-  TrictracState(const TrictracState&) = default;
+  TrictracState(const TrictracState &) = default;
 
   Player CurrentPlayer() const override;
   std::string ActionToString(Player player, Action action_id) const override;
+  std::vector<std::pair<Action, double>> ChanceOutcomes() const override;
   std::string ToString() const override;
   bool IsTerminal() const override;
   std::vector<double> Returns() const override;
@@ -51,16 +53,18 @@ class TrictracState : public State {
                          absl::Span<float> values) const override;
   std::unique_ptr<State> Clone() const override;
 
- protected:
+protected:
   void DoApplyAction(Action action_id) override;
   std::vector<Action> LegalActions() const override;
 
- private:
+private:
   // Helper functions for move generation and action encoding.
-  std::vector<std::pair<CheckerMove, CheckerMove>> GenerateLegalMoveSequences() const;
-  Action MoveSequenceToAction(const std::pair<CheckerMove, CheckerMove>& moves) const;
-  std::pair<CheckerMove, CheckerMove> ActionToMoveSequence(Action action_id) const;
-
+  std::vector<std::pair<CheckerMove, CheckerMove>>
+  GenerateLegalMoveSequences() const;
+  Action
+  MoveSequenceToAction(const std::pair<CheckerMove, CheckerMove> &moves) const;
+  std::pair<CheckerMove, CheckerMove>
+  ActionToMoveSequence(Action action_id) const;
 
   Board board_;
   TrictracPlayer player0_{"Player 0", Color::kWhite};
@@ -72,8 +76,8 @@ class TrictracState : public State {
 
 // Game object for Trictrac.
 class TrictracGame : public Game {
- public:
-  explicit TrictracGame(const GameParameters& params);
+public:
+  explicit TrictracGame(const GameParameters &params);
   int NumDistinctActions() const override;
   std::unique_ptr<State> NewInitialState() const override {
     return std::make_unique<TrictracState>(shared_from_this());
@@ -88,7 +92,7 @@ class TrictracGame : public Game {
   int MaxGameLength() const override { return 500; } // Estimate
 };
 
-}  // namespace trictrac
-}  // namespace open_spiel
+} // namespace trictrac
+} // namespace open_spiel
 
-#endif  // OPEN_SPIEL_GAMES_TRICTRAC_H_
+#endif // OPEN_SPIEL_GAMES_TRICTRAC_H_
