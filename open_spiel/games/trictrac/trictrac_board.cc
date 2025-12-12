@@ -34,8 +34,8 @@ bool CheckerMove::IsExit() const { return to == 0 && from != 0; }
 
 Board::Board() {
   positions_.fill(0);
-  positions_[0] = 15;    // White's starting position
-  positions_[23] = -15;  // Black's starting position
+  positions_[0] = 15;   // White's starting position
+  positions_[23] = -15; // Black's starting position
 }
 
 Board Board::Mirror() const {
@@ -54,31 +54,34 @@ void Board::MoveChecker(Color color, CheckerMove move) {
 }
 
 void Board::AddChecker(Color color, int field) {
-  if (field == 0) return;  // Bearing off
+  if (field == 0)
+    return; // Bearing off
   SPIEL_CHECK_GE(field, 1);
   SPIEL_CHECK_LE(field, 24);
 
-  int& pos = positions_[field - 1];
+  int &pos = positions_[field - 1];
   int unit = (color == Color::kWhite) ? 1 : -1;
 
-  SPIEL_CHECK_TRUE((pos * unit) >= 0);  // Cannot add to a blocked point
+  SPIEL_CHECK_TRUE((pos * unit) >= 0); // Cannot add to a blocked point
   pos += unit;
 }
 
 void Board::RemoveChecker(Color color, int field) {
-  if (field == 0) return;
+  if (field == 0)
+    return;
   SPIEL_CHECK_GE(field, 1);
   SPIEL_CHECK_LE(field, 24);
 
-  int& pos = positions_[field - 1];
+  int &pos = positions_[field - 1];
   int unit = (color == Color::kWhite) ? 1 : -1;
 
-  SPIEL_CHECK_TRUE((pos * unit) > 0);  // Must have a checker to remove
+  SPIEL_CHECK_TRUE((pos * unit) > 0); // Must have a checker to remove
   pos -= unit;
 }
 
 bool Board::IsBlocked(Color color, int field) const {
-  if (field == 0) return false;  // Can always bear off
+  if (field == 0)
+    return false; // Can always bear off
   SPIEL_CHECK_GE(field, 1);
   SPIEL_CHECK_LE(field, 24);
 
@@ -90,8 +93,7 @@ bool Board::IsBlocked(Color color, int field) const {
   return (pos_val * unit) < 0;
 }
 
-std::vector<std::pair<int, int>> Board::GetPlayerCheckers(
-    Color color) const {
+std::vector<std::pair<int, int>> Board::GetPlayerCheckers(Color color) const {
   std::vector<std::pair<int, int>> checkers;
   for (int i = 0; i < 24; ++i) {
     int count = positions_[i];
@@ -113,8 +115,10 @@ bool Board::IsQuarterFilled(Color color, int field) const {
   std::array<int, 6> quarter = GetQuarterFields(field);
   for (int f : quarter) {
     int count = positions_[f - 1];
-    if (color == Color::kWhite && count < 2) return false;
-    if (color == Color::kBlack && count > -2) return false;
+    if (color == Color::kWhite && count < 2)
+      return false;
+    if (color == Color::kBlack && count > -2)
+      return false;
   }
   return true;
 }
@@ -125,7 +129,8 @@ bool Board::IsQuarterFillable(Color color, int field) const {
 
   // Check for opponent's checkers
   for (int f : quarter) {
-    if (positions_[f - 1] * unit < 0) return false;
+    if (positions_[f - 1] * unit < 0)
+      return false;
   }
 
   // Simplified check: just ensure no opponent checkers are present.
@@ -144,15 +149,14 @@ std::array<int, 6> Board::GetQuarterFields(int field) const {
 }
 
 #include <sstream>
-#include <iomanip>
 #include <vector>
 
 namespace open_spiel {
 namespace trictrac {
 
 // Helper function to transpose a 2D vector of strings.
-std::vector<std::vector<std::string>> Transpose(
-    std::vector<std::vector<std::string>>& matrix) {
+std::vector<std::vector<std::string>>
+Transpose(std::vector<std::vector<std::string>> &matrix) {
   if (matrix.empty() || matrix[0].empty()) {
     return {};
   }
@@ -166,69 +170,72 @@ std::vector<std::vector<std::string>> Transpose(
   return transposed;
 }
 
-
 std::string Board::ToString() const {
-    const int kColSize = 5;
-    std::vector<std::vector<std::string>> columns;
-    columns.reserve(24);
+  const int kColSize = 5;
+  std::vector<std::vector<std::string>> columns;
+  columns.reserve(24);
 
-    for (int count : positions_) {
-        std::string checker_char = (count > 0) ? "O" : "X";
-        int num_checkers = std::abs(count);
-        std::vector<std::string> cells(kColSize, " ");
-        for (int i = 0; i < std::min(num_checkers, kColSize); ++i) {
-            cells[i] = checker_char;
-        }
-        if (num_checkers > kColSize) {
-            cells[kColSize - 1] = std::to_string(num_checkers);
-        }
-        columns.push_back(cells);
+  for (int count : positions_) {
+    std::string checker_char = (count > 0) ? "O" : "X";
+    int num_checkers = std::abs(count);
+    std::vector<std::string> cells(kColSize, " ");
+    for (int i = 0; i < std::min(num_checkers, kColSize); ++i) {
+      cells[i] = checker_char;
     }
-
-    std::vector<std::vector<std::string>> upper_positions(columns.begin() + 12, columns.end());
-    std::reverse(upper_positions.begin(), upper_positions.end());
-
-    std::vector<std::vector<std::string>> lower_positions(columns.begin(), columns.begin() + 12);
-     for (auto& col : lower_positions) {
-        std::reverse(col.begin(), col.end());
+    if (num_checkers > kColSize) {
+      cells[kColSize - 1] = std::to_string(num_checkers);
     }
-    std::reverse(lower_positions.begin(), lower_positions.end());
+    columns.push_back(cells);
+  }
 
+  std::vector<std::vector<std::string>> upper_positions(columns.begin() + 12,
+                                                        columns.end());
+  std::reverse(upper_positions.begin(), upper_positions.end());
 
-    std::stringstream ss;
-    ss << "     13   14   15   16   17   18      19   20   21   22   23   24\n";
-    ss << "  ----------------------------------------------------------------\n";
+  std::vector<std::vector<std::string>> lower_positions(columns.begin(),
+                                                        columns.begin() + 12);
+  for (auto &col : lower_positions) {
+    std::reverse(col.begin(), col.end());
+  }
+  std::reverse(lower_positions.begin(), lower_positions.end());
 
-    auto upper_transposed = Transpose(upper_positions);
-    for (const auto& row : upper_transposed) {
-        ss << " |";
-        for (int i = 0; i < 6; ++i) ss << std::setw(5) << row[i];
-        ss << " | |";
-        for (int i = 6; i < 12; ++i) ss << std::setw(5) << row[i];
-        ss << " |\n";
-    }
+  std::stringstream ss;
+  ss << "     13   14   15   16   17   18      19   20   21   22   23   24\n";
+  ss << "  ----------------------------------------------------------------\n";
 
-    ss << " |------------------------------ | | -----------------------------|\n";
+  auto upper_transposed = Transpose(upper_positions);
+  for (const auto &row : upper_transposed) {
+    ss << " |";
+    for (int i = 0; i < 6; ++i)
+      ss << std::setw(5) << row[i];
+    ss << " | |";
+    for (int i = 6; i < 12; ++i)
+      ss << std::setw(5) << row[i];
+    ss << " |\n";
+  }
 
-    auto lower_transposed = Transpose(lower_positions);
-    for (const auto& row : lower_transposed) {
-        ss << " |";
-        for (int i = 0; i < 6; ++i) ss << std::setw(5) << row[i];
-        ss << " | |";
-        for (int i = 6; i < 12; ++i) ss << std::setw(5) << row[i];
-        ss << " |\n";
-    }
+  ss << " |------------------------------ | | -----------------------------|\n";
 
-    ss << "  ----------------------------------------------------------------\n";
-    ss << "    12   11   10    9    8    7        6    5    4    3    2    1\n";
+  auto lower_transposed = Transpose(lower_positions);
+  for (const auto &row : lower_transposed) {
+    ss << " |";
+    for (int i = 0; i < 6; ++i)
+      ss << std::setw(5) << row[i];
+    ss << " | |";
+    for (int i = 6; i < 12; ++i)
+      ss << std::setw(5) << row[i];
+    ss << " |\n";
+  }
 
-    return ss.str();
+  ss << "  ----------------------------------------------------------------\n";
+  ss << "    12   11   10    9    8    7        6    5    4    3    2    1\n";
+
+  return ss.str();
 }
 
-void Board::SetPositions(const std::array<int, 24>& positions) {
+void Board::SetPositions(const std::array<int, 24> &positions) {
   positions_ = positions;
 }
 
-
-}  // namespace trictrac
-}  // namespace open_spiel
+} // namespace trictrac
+} // namespace open_spiel
