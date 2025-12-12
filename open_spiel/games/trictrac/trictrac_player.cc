@@ -23,17 +23,17 @@ Color OpponentColor(Color color) {
 
 Player OtherPlayer(Player player) {
   switch (player) {
-    case Player::kPlayer0:
-      return Player::kPlayer1;
-    case Player::kPlayer1:
-      return Player::kPlayer0;
-    default:
-      return Player::kNobody;
+  case kPlayer0:
+    return kPlayer1;
+  case kPlayer1:
+    return kPlayer0;
+  default:
+    return kNobody;
   }
 }
 
 TrictracPlayer::TrictracPlayer(std::string name, Color color)
     : name(name), color(color) {}
 
-}  // namespace trictrac
-}  // namespace open_spiel
+} // namespace trictrac
+} // namespace open_spiel

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "open_spiel/games/trictrac/trictrac.h"
+#include "open_spiel/games/trictrac/trictrac_player.h"
 
 #include <algorithm>
 #include <memory>
@@ -96,14 +97,13 @@ std::vector<std::pair<Action, double>> TrictracState::ChanceOutcomes() const {
 std::string TrictracState::ToString() const {
   std::stringstream ss;
   const TrictracPlayer &current_p =
-      (current_player_ == Player::kPlayer0) ? player0_ : player1_;
+      (current_player_ == kPlayer0) ? player0_ : player1_;
   const TrictracPlayer &opponent_p =
-      (current_player_ == Player::kPlayer0) ? player1_ : player0_;
+      (current_player_ == kPlayer0) ? player1_ : player0_;
 
-  ss << "Current Player: " << current_p.GetName()
-     << " (holes: " << current_p.holes << ", points: " << current_p.points
-     << ")\n";
-  ss << "Opponent: " << opponent_p.GetName() << " (holes: " << opponent_p.holes
+  ss << "Current Player: " << current_p.name << " (holes: " << current_p.holes
+     << ", points: " << current_p.points << ")\n";
+  ss << "Opponent: " << opponent_p.name << " (holes: " << opponent_p.holes
      << ", points: " << opponent_p.points << ")\n";
 
   if (needs_roll_) {
@@ -144,8 +144,7 @@ void TrictracState::DoApplyAction(Action action_id) {
 
   // Player node: apply the chosen move.
   std::pair<CheckerMove, CheckerMove> moves = ActionToMoveSequence(action_id);
-  Color color =
-      (current_player_ == Player::kPlayer0) ? Color::kWhite : Color::kBlack;
+  Color color = (current_player_ == kPlayer0) ? Color::kWhite : Color::kBlack;
   board_.MoveChecker(color, moves.first);
   board_.MoveChecker(color, moves.second);
 
@@ -183,7 +182,7 @@ std::vector<std::pair<CheckerMove, CheckerMove>>
 TrictracState::GenerateLegalMoveSequences() const {
   Board board_for_rules = board_;
   Color color_for_rules = Color::kWhite;
-  if (current_player_ == Player::kPlayer1) {
+  if (current_player_ == kPlayer1) {
     board_for_rules = board_.Mirror();
     color_for_rules = Color::kBlack;
   }
@@ -192,7 +191,7 @@ TrictracState::GenerateLegalMoveSequences() const {
   auto sequences = rules.GetLegalMoveSequences();
 
   // Mirror back the moves if the player was Black
-  if (current_player_ == Player::kPlayer1) {
+  if (current_player_ == kPlayer1) {
     for (auto &seq : sequences) {
       seq.first = seq.first.Mirror();
       seq.second = seq.second.Mirror();

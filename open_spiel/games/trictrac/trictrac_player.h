@@ -15,6 +15,7 @@
 #ifndef OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_PLAYER_H_
 #define OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_PLAYER_H_
 
+#include "open_spiel/spiel_utils.h"
 #include <string>
 
 namespace open_spiel {
@@ -30,18 +31,17 @@ enum class Color {
 Color OpponentColor(Color color);
 
 // Represents a player in the game, mapping to Player 0 and Player 1.
-enum class Player {
-  kPlayer0,
-  kPlayer1,
-  kNobody,  // Represents neither player, e.g., at the start or end of a game.
-};
+inline constexpr const int kPlayer0 = 1;
+inline constexpr const int kPlayer1 = 2;
+// Represents neither player, e.g., at the start or end of a game.
+inline constexpr const int kNobody = 0;
 
 // Returns the other player.
 Player OtherPlayer(Player player);
 
 // Struct for storing player-related data.
 class TrictracPlayer {
- public:
+public:
   TrictracPlayer(std::string name, Color color);
 
   std::string name;
@@ -54,7 +54,7 @@ class TrictracPlayer {
   int dice_roll_count = 0;
 };
 
-}  // namespace trictrac
-}  // namespace open_spiel
+} // namespace trictrac
+} // namespace open_spiel
 
-#endif  // OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_PLAYER_H_
+#endif // OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_PLAYER_H_

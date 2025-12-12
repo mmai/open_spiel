@@ -15,12 +15,14 @@
 #ifndef OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_DICE_H_
 #define OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_DICE_H_
 
+#include <string>
+
 namespace open_spiel {
 namespace trictrac {
 
 // Represents the two dice used in Trictrac.
 struct Dice {
- public:
+public:
   Dice(int v1, int v2) : val1(v1), val2(v2) {}
 
   // Returns true if the two dice have the same value.
@@ -28,9 +30,11 @@ struct Dice {
 
   int val1;
   int val2;
+
+  std::string ToString() const;
 };
 
-}  // namespace trictrac
-}  // namespace open_spiel
+} // namespace trictrac
+} // namespace open_spiel
 
-#endif  // OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_DICE_H_
+#endif // OPEN_SPIEL_GAMES_TRICTRAC_TRICTRAC_DICE_H_

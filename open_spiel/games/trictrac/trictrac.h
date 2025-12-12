@@ -1,4 +1,4 @@
-// Copyright 2024 DeepMind Technologies Limited
+// Copyright 2025 Henri Bourcereau
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 #include "open_spiel/games/trictrac/trictrac_dice.h"
 #include "open_spiel/games/trictrac/trictrac_player.h"
 #include "open_spiel/spiel.h"
+#include "open_spiel/spiel_utils.h"
 
 namespace open_spiel {
 namespace trictrac {
@@ -69,7 +70,7 @@ private:
   Board board_;
   TrictracPlayer player0_{"Player 0", Color::kWhite};
   TrictracPlayer player1_{"Player 1", Color::kBlack};
-  Player current_player_ = Player::kPlayer0;
+  Player current_player_ = kPlayer0;
   Dice current_dice_{1, 1}; // Default dice
   bool needs_roll_ = true;
 };
@@ -85,9 +86,9 @@ public:
   int NumPlayers() const override { return kNumPlayers; }
   double MinUtility() const override { return -1.0; }
   double MaxUtility() const override { return 1.0; }
-  std::shared_ptr<const Game> Clone() const override {
-    return std::make_shared<TrictracGame>(*this);
-  }
+  // std::shared_ptr<const Game> Clone() const override {
+  //   return std::make_shared<TrictracGame>(*this);
+  // }
   std::vector<int> ObservationTensorShape() const override;
   int MaxGameLength() const override { return 500; } // Estimate
 };

@@ -1,5 +1,3 @@
-install:
-  ./install.sh
 build:
   CXX=$(which clang++) bash ./open_spiel/scripts/build_and_run_tests.sh
 play game:
