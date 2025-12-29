@@ -2,6 +2,10 @@ clean:
   rm -rf build
 build:
   CXX=$(which clang++) bash ./open_spiel/scripts/build_and_run_tests.sh
+[working-directory: 'build']
+buildshared:
+  BUILD_SHARED_LIB=ON CXX=$(which clang++) cmake -DPython3_EXECUTABLE=$(which python3) -DCMAKE_CXX_COMPILER=${CXX} ../open_spiel
+  make -j$(nproc) open_spiel
 play game:
   build/examples/example --game={{game}}
 playpython game:
