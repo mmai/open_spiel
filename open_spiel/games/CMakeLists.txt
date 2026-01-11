@@ -197,8 +197,8 @@ set(GAME_SOURCES
   tiny_hanabi/tiny_hanabi.h
   trade_comm/trade_comm.cc
   trade_comm/trade_comm.h
-  trictrac/trictrac.cc
-  trictrac/trictrac.h
+  # trictrac/trictrac.cc
+  # trictrac/trictrac.h
   twenty_forty_eight/2048.cc
   twenty_forty_eight/2048.h
   twixt/twixt.cc
@@ -664,9 +664,9 @@ add_executable(trade_comm_test trade_comm/trade_comm_test.cc ${OPEN_SPIEL_OBJECT
                $<TARGET_OBJECTS:tests>)
 add_test(trade_comm_test trade_comm_test)
 
-add_executable(trictrac_test trictrac/trictrac_test.cc ${OPEN_SPIEL_OBJECTS}
-               $<TARGET_OBJECTS:tests>)
-add_test(trictrac_test trictrac_test)
+# add_executable(trictrac_test trictrac/trictrac_test.cc ${OPEN_SPIEL_OBJECTS}
+#                $<TARGET_OBJECTS:tests>)
+# add_test(trictrac_test trictrac_test)
 
 add_executable(twixt_test twixt/twixt_test.cc ${OPEN_SPIEL_OBJECTS}
                $<TARGET_OBJECTS:tests>)

@@ -12,6 +12,13 @@ just build
 just play backgammon`
 ```
 
+Version python :
+
+```sh
+pip install .
+PYTHONPATH=$PYTHONPATH:./.:./build/python python3 open_spiel/python/examples/example.py --game_string=python_tic_tac_toe
+```
+
 ## TODO
 
 - Etablir correspondances entre environnements d'entrainement burn-rl et openspiel
