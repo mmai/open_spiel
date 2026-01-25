@@ -14,20 +14,15 @@
 
 # Lint as python3
 """Trictrac implemented in Python.
-
-This is a template for the Python implementation of Trictrac.
 """
 
 import enum
 import numpy as np
 import pyspiel
 
+# for Open Spiel game info
 _NUM_PLAYERS = 2
 _NUM_CHANCE_OUTCOMES = 36 # 2 dice
-_NUM_POINTS = 24
-_NUM_DICE_OUTCOMES = 6
-_NUM_CHECKERS_PER_PLAYER = 15
-
 # Action space size from Rust implementation (bot/src/training_common.rs)
 # 1 (Roll) + 1 (Go) + 512 (mouvements possibles)
 _NUM_DISTINCT_ACTIONS = 514
@@ -38,6 +33,9 @@ _STATE_ENCODING_SIZE = 36
 
 _DEFAULT_MAX_PLAYER_TURNS = 1000 # Adjusted estimate
 
+# _NUM_POINTS = 24
+# _NUM_DICE_OUTCOMES = 6
+# _NUM_CHECKERS_PER_PLAYER = 15
 
 _GAME_TYPE = pyspiel.GameType(
     short_name="python_trictrac",
@@ -45,8 +43,10 @@ _GAME_TYPE = pyspiel.GameType(
     dynamics=pyspiel.GameType.Dynamics.SEQUENTIAL,
     chance_mode=pyspiel.GameType.ChanceMode.EXPLICIT_STOCHASTIC,
     information=pyspiel.GameType.Information.PERFECT_INFORMATION,
-    utility=pyspiel.GameType.Utility.ZERO_SUM,
-    reward_model=pyspiel.GameType.RewardModel.TERMINAL,
+    # utility=pyspiel.GameType.Utility.ZERO_SUM,
+    # reward_model=pyspiel.GameType.RewardModel.TERMINAL,
+    utility=pyspiel.GameType.Utility.GENERAL_SUM,
+    reward_model=pyspiel.GameType.RewardModel.REWARDS,
     max_num_players=_NUM_PLAYERS,
     min_num_players=_NUM_PLAYERS,
     provides_information_state_string=False,
@@ -61,9 +61,11 @@ _GAME_INFO = pyspiel.GameInfo(
     num_distinct_actions=_NUM_DISTINCT_ACTIONS,
     max_chance_outcomes=_NUM_CHANCE_OUTCOMES,
     num_players=_NUM_PLAYERS,
-    min_utility=-1.0,
-    max_utility=1.0,
-    utility_sum=0.0,
+    # min_utility=-1.0,
+    # max_utility=1.0,
+    # utility_sum=0.0,
+    min_utility=0.0,
+    max_utility=180.0, # 12 points * 12 trous = 144 + points supplémentaires dernier coup = ??
     max_game_length=3 * _DEFAULT_MAX_PLAYER_TURNS) # Rough estimate
 
 
