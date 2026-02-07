@@ -79,18 +79,13 @@ class TrictracGame(pyspiel.Game):
     """Returns a state corresponding to the start of a game."""
     return TrictracState(self)
 
-  def max_utility(self):
-    """Returns the maximum possible utility in the game."""
-    pass
+  # def max_utility(self):
+  #   """Returns the maximum possible utility in the game."""
+  #   pass
 
   def observation_tensor_shape(self):
     """Returns the shape of the observation tensor."""
     return [_STATE_ENCODING_SIZE]
-
-  def num_checkers_per_player(self):
-    """Returns the number of checkers per player."""
-    pass
-
 
 class TrictracState(pyspiel.State):
   """A python version of the Trictrac state."""
@@ -100,8 +95,19 @@ class TrictracState(pyspiel.State):
     super().__init__(game)
 
   def current_player(self):
-    """Returns id of the next player to move, or TERMINAL if game is over."""
-    pass
+    """Returns id of the current player to act.
+
+    The id is:
+      - TERMINAL if game is over.
+      - CHANCE if a player is drawing a number to fill out their hand.
+      - a number otherwise.
+    """
+    if self.is_terminal():
+      return pyspiel.PlayerId.TERMINAL
+    elif len(self.hands[self._num_players - 1]) < self._hand_length:
+      return pyspiel.PlayerId.CHANCE
+    else:
+      return self._current_player
 
   def _legal_actions(self, player):
     """Returns a list of legal actions, sorted in ascending order."""
@@ -141,6 +147,6 @@ class TrictracState(pyspiel.State):
 
   def __str__(self):
     """String for debug purposes. No particular semantics are required."""
-    pass
+    return ""
 
 pyspiel.register_game(_GAME_TYPE, TrictracGame)

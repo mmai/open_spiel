@@ -13,6 +13,10 @@ play game:
   build/examples/example --game={{game}}
 playpython game:
   python3 open_spiel/python/examples/example.py --game_string={{game}}
+installtrictrac:
+  pip install --no-deps --force-reinstall --prefix .devenv/state/venv ../../trictrac/target/wheels/*.whl
+playtrictrac:
+  python3 open_spiel/python/examples/example.py --game_string=python_trictrac
 trainzero game:
   ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}}/
 continuetrainzero game:
