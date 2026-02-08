@@ -19,6 +19,7 @@
 import enum
 import numpy as np
 import pyspiel
+import trictrac_store
 
 # for Open Spiel game info
 _NUM_PLAYERS = 2
@@ -65,7 +66,7 @@ _GAME_INFO = pyspiel.GameInfo(
     # max_utility=1.0,
     # utility_sum=0.0,
     min_utility=0.0,
-    max_utility=180.0, # 12 points * 12 trous = 144 + points supplémentaires dernier coup = ??
+    max_utility=180.0, # 12 points * 12 holes = 144 + last play possible points = ??
     max_game_length=3 * _DEFAULT_MAX_PLAYER_TURNS) # Rough estimate
 
 
@@ -92,7 +93,12 @@ class TrictracState(pyspiel.State):
 
   def __init__(self, game):
     """Constructor; should only be called by Game.new_initial_state."""
+    self._store = trictrac_store.TricTrac()
     super().__init__(game)
+
+  def is_chance_node(self):
+    # print("chance node ? ", self._store.needs_roll())
+    return self._store.needs_roll()
 
   def current_player(self):
     """Returns id of the current player to act.
@@ -104,46 +110,54 @@ class TrictracState(pyspiel.State):
     """
     if self.is_terminal():
       return pyspiel.PlayerId.TERMINAL
-    elif len(self.hands[self._num_players - 1]) < self._hand_length:
+    elif self._store.needs_roll():
       return pyspiel.PlayerId.CHANCE
     else:
-      return self._current_player
+      return self._store.current_player_idx()
 
   def _legal_actions(self, player):
     """Returns a list of legal actions, sorted in ascending order."""
-    pass
+    return self._store.get_legal_actions(player)
+
+  def _roll_from_chance_idx(self, action):
+    return [(i,j) for i in range(1,7) for j in range(1,7)][action]
 
   def _action_to_string(self, player, action):
     """Action -> string."""
-    pass
+    if self.is_chance_node():
+        return "{}".format(self._roll_from_chance_idx(action))
+    else:
+        return self._store.action_to_string(player, action)
 
   def chance_outcomes(self):
     """Returns the possible chance outcomes and their probabilities."""
-    pass
+    assert self.is_chance_node()
+    p = 1.0 / _NUM_CHANCE_OUTCOMES
+    return [(i, p) for i in range(0,36)]
 
   def _apply_action(self, action):
     """Applies the specified action to the state."""
-    pass
-
-  def _undo_action(self, player, action):
-    """Undoes the specified action."""
-    pass
+    print("in apply action", self.is_chance_node(), action)
+    if self.is_chance_node():
+        self._store.apply_dice_roll(self._roll_from_chance_idx(action))
+    else:
+        self._store.apply_action(action)
 
   def is_terminal(self):
     """Returns True if the game is over."""
-    pass
+    return self._store.is_game_ended()
 
   def returns(self):
     """Total reward for each player over the course of the game so far."""
-    pass
+    return self._store.get_players_scores()
 
   def observation_string(self, player):
     """Returns a string representation of the observation for the player."""
-    pass
+    self._store.get_observation_string(player)
 
   def observation_tensor(self, player, values):
     """Populates the observation tensor for the player."""
-    pass
+    self._store.get_tensor(player)
 
   def __str__(self):
     """String for debug purposes. No particular semantics are required."""
