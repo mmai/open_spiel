@@ -66,7 +66,7 @@ _GAME_INFO = pyspiel.GameInfo(
     # max_utility=1.0,
     # utility_sum=0.0,
     min_utility=0.0,
-    max_utility=180.0, # 12 points * 12 holes = 144 + last play possible points = ??
+    max_utility=200.0, # 12 points * 12 holes = 144 + last play possible points = ??
     max_game_length=3 * _DEFAULT_MAX_PLAYER_TURNS) # Rough estimate
 
 
