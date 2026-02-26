@@ -223,6 +223,7 @@ set (OPEN_SPIEL_OBJECTS
   $<TARGET_OBJECTS:open_spiel_core>
   $<TARGET_OBJECTS:bots>
   $<TARGET_OBJECTS:games>
+  $<TARGET_OBJECTS:trictrac_game>
   $<TARGET_OBJECTS:game_transforms>
   $<TARGET_OBJECTS:bridge_double_dummy_solver>
   $<TARGET_OBJECTS:algorithms>
@@ -282,6 +283,32 @@ endif()
 # include for example "open_spiel/spiel.h" (assuming this directory is named
 # open_spiel).
 include_directories(..)
+
+# ── Corrosion: CMake-native Rust integration ──────────────────────────────────
+include(FetchContent)
+FetchContent_Declare(
+  Corrosion
+  GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
+  GIT_TAG v0.5.1
+)
+FetchContent_MakeAvailable(Corrosion)
+
+# Import the trictrac-store Rust crate (produces the 'trictrac-store' link target).
+corrosion_import_crate(
+  MANIFEST_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../trictrac/store/Cargo.toml
+  CRATES trictrac-store
+)
+# Generate the cxx bridge shim from cxxengine.rs.
+# Creates 'trictrac_cxx_bridge' with INTERFACE_INCLUDE_DIRECTORIES for the
+# generated cxxengine.rs.h header.
+corrosion_add_cxxbridge(trictrac_cxx_bridge
+  CRATE trictrac_store
+  FILES cxxengine.rs
+)
+
+# Any binary that includes $<TARGET_OBJECTS:trictrac_game> needs to link
+# against the Rust static library and Python (pulled in by PyO3 in the crate).
+link_libraries(trictrac_cxx_bridge trictrac_store Python3::Python)
 
 add_subdirectory (algorithms)
 add_subdirectory (bots)

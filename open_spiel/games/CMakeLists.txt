@@ -681,3 +681,28 @@ endif()
 add_executable(y_test y/y_test.cc ${OPEN_SPIEL_OBJECTS}
                $<TARGET_OBJECTS:tests>)
 add_test(y_test y_test)
+
+# ── Trictrac (Rust-backed via cxx.rs) ────────────────────────────────────────
+# Separate OBJECT library (not in GAME_SOURCES) so that only trictrac_test
+# needs to link against the Rust static library.
+add_library(trictrac_game OBJECT
+  trictrac/trictrac.cc
+  trictrac/trictrac.h
+)
+target_include_directories(trictrac_game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
+# trictrac_cxx_bridge provides INTERFACE_INCLUDE_DIRECTORIES for cxxengine.rs.h
+target_link_libraries(trictrac_game PUBLIC trictrac_cxx_bridge)
+
+add_executable(trictrac_test
+  trictrac/trictrac_test.cc
+  ${OPEN_SPIEL_OBJECTS}
+  $<TARGET_OBJECTS:trictrac_game>
+  $<TARGET_OBJECTS:tests>
+)
+target_link_libraries(trictrac_test
+  PRIVATE
+    trictrac_cxx_bridge
+    trictrac_store
+    Python3::Python
+)
+add_test(trictrac_test trictrac_test)

@@ -15,10 +15,17 @@ playpython game:
   python3 open_spiel/python/examples/example.py --game_string={{game}}
 installtrictrac:
   pip install --no-deps --force-reinstall --prefix .devenv/state/venv ../../trictrac/target/wheels/*.whl
+buildtrictrac:
+  mkdir -p build
+  cd build && CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=Release ../open_spiel && make -j$(nproc) trictrac_test
+testtrictrac: buildtrictrac
+  ./build/games/trictrac_test
 traintrictrac:
   python3 open_spiel/python/examples/trictrac_ppo.py
 playtrictrac:
   python3 open_spiel/python/examples/example.py --game_string=python_trictrac
+playtrictrac_cpp:
+  ./build/examples/example --game=trictrac
 trainzero game:
   ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}}/
 continuetrainzero game:
