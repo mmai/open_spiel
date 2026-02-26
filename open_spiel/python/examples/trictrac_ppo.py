@@ -73,6 +73,6 @@ for episode in range(num_episodes):
 # ------------------------
 
 saver = tf.train.Saver()
-saver.save(sess, "ppo_backgammon_model.ckpt")
+saver.save(sess, "ppo_trictrac_model.ckpt")
 
 print("Modèle PPO sauvegardé.")

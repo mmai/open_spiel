@@ -27,7 +27,7 @@ playtrictrac:
 playtrictrac_cpp:
   ./build/examples/example --game=trictrac
 trainzero game:
-  ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}}/
+  ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}}
 continuetrainzero game:
   ./build/examples/alpha_zero_torch_example ./trainzero/{{game}}/config.json
 playzero game:
