@@ -37,9 +37,9 @@ const GameType kGameType{
     /*long_name=*/"Trictrac",
     GameType::Dynamics::kSequential,
     GameType::ChanceMode::kExplicitStochastic,
-    GameType::Information::kPerfectInformation,
-    GameType::Utility::kGeneralSum,
-    GameType::RewardModel::kRewards,
+    GameType::Information::kPerfectInformation, GameType::Utility::kZeroSum,
+    GameType::RewardModel::kTerminal,
+    // GameType::RewardModel::kRewards,
     /*min_num_players=*/2,
     /*max_num_players=*/2,
     /*provides_information_state_string=*/false,
@@ -149,8 +149,8 @@ bool TrictracState::IsTerminal() const {
 std::vector<double> TrictracState::Returns() const {
   if (!IsTerminal()) return {0.0, 0.0};
   const trictrac_engine::PlayerScores scores = engine_->get_players_scores();
-  return {static_cast<double>(scores.score_p1),
-          static_cast<double>(scores.score_p2)};
+  double diff = static_cast<double>(scores.score_p1) - static_cast<double>(scores.score_p2);
+  return {diff, -diff};
 }
 
 // ── Observation ───────────────────────────────────────────────────────────────
