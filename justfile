@@ -17,7 +17,8 @@ installtrictrac:
   pip install --no-deps --force-reinstall --prefix .devenv/state/venv ../../trictrac/target/wheels/*.whl
 buildtrictrac:
   mkdir -p build
-  cd build && CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=Release ../open_spiel && make -j$(nproc) trictrac_test
+  cd build && CXX=$(which clang++) cmake ../open_spiel && make -j$(nproc) trictrac_test
+  # cd build && CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=Release ../open_spiel && make -j$(nproc) trictrac_test
 testtrictrac: buildtrictrac
   ./build/games/trictrac_test
 traintrictrac:
@@ -26,6 +27,9 @@ playtrictrac:
   python3 open_spiel/python/examples/example.py --game_string=python_trictrac
 playtrictrac_cpp:
   ./build/examples/example --game=trictrac
+buildzero:
+  mkdir -p build
+  cd build && OPEN_SPIEL_BUILD_WITH_LIBTORCH=ON OPEN_SPIEL_BUILD_WITH_LIBNOP=ON CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../open_spiel && make -j$(nproc) alpha_zero_torch_example
 trainzero game:
   ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}}
 continuetrainzero game:

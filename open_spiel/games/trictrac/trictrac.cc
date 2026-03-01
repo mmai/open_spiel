@@ -96,14 +96,20 @@ std::vector<Action> TrictracState::LegalActions() const {
     for (int i = 0; i < kNumChanceOutcomes; ++i) outcomes[i] = i;
     return outcomes;
   }
-  const rust::Vec<uint64_t> rust_actions =
-      engine_->get_legal_actions(static_cast<uint64_t>(CurrentPlayer()));
-  std::vector<Action> actions;
-  actions.reserve(rust_actions.size());
-  for (uint64_t a : rust_actions) actions.push_back(static_cast<Action>(a));
-  std::sort(actions.begin(), actions.end());
-  actions.erase(std::unique(actions.begin(), actions.end()), actions.end());
-  return actions;
+  try {
+    const rust::Vec<uint64_t> rust_actions =
+        engine_->get_legal_actions(static_cast<uint64_t>(CurrentPlayer()));
+    std::vector<Action> actions;
+    actions.reserve(rust_actions.size());
+    for (uint64_t a : rust_actions) actions.push_back(static_cast<Action>(a));
+    std::sort(actions.begin(), actions.end());
+    actions.erase(std::unique(actions.begin(), actions.end()), actions.end());
+    return actions;
+  } catch (const rust::Error& e) {
+    SpielFatalError(
+        absl::StrCat("TrictracState::LegalActions failed: ", e.what()));
+  }
+  return {};
 }
 
 // ── Chance outcomes ───────────────────────────────────────────────────────────

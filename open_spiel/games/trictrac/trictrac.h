@@ -86,7 +86,7 @@ class TrictracGame : public Game {
   std::unique_ptr<State> NewInitialState() const override;
   int MaxChanceOutcomes() const override { return kNumChanceOutcomes; }
   int NumPlayers() const override { return 2; }
-  double MinUtility() const override { return 0.0; }
+  double MinUtility() const override { return -MaxUtility(); }
   double MaxUtility() const override { return 200.0; }
   // Rough upper bound: chance node + roll action + move per turn, times max turns.
   int MaxGameLength() const override { return 3 * max_turns_; }
