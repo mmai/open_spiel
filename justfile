@@ -29,6 +29,9 @@ playtrictrac_cpp:
   ./build/examples/example --game=trictrac
 buildzero:
   mkdir -p build
+  cd build && OPEN_SPIEL_BUILD_WITH_LIBTORCH=ON OPEN_SPIEL_BUILD_WITH_LIBNOP=ON CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" ../open_spiel && make -j$(nproc) alpha_zero_torch_example
+buildzero_debug:
+  mkdir -p build
   cd build && OPEN_SPIEL_BUILD_WITH_LIBTORCH=ON OPEN_SPIEL_BUILD_WITH_LIBNOP=ON CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../open_spiel && make -j$(nproc) alpha_zero_torch_example
 trainzero game:
   ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}}
