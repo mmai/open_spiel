@@ -1,4 +1,4 @@
-// Copyright 2024 Henri Rebecq
+// Copyright 2026 Henri Bourcereau
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 //
 // Game name: "trictrac"
 // Parameters:
-//   "max_turns" int  Maximum player turns before forced termination (default 1000)
+//   "max_turns" int  Maximum player turns before forced termination (default
+//   1000)
 
 #ifndef OPEN_SPIEL_GAMES_TRICTRAC_H_
 #define OPEN_SPIEL_GAMES_TRICTRAC_H_
@@ -36,12 +37,13 @@
 namespace open_spiel {
 namespace trictrac {
 
-// Action-space size: 0=Roll, 1=Go, 2-513=Move (matches ACTION_SPACE_SIZE in Rust).
+// Action-space size: 0=Roll, 1=Go, 2-513=Move (matches ACTION_SPACE_SIZE in
+// Rust).
 inline constexpr int kNumDistinctActions = 514;
 // 6×6 dice outcomes, all equally probable.
 inline constexpr int kNumChanceOutcomes = 36;
-// State vector length (matches GameState::to_vec() in Rust).
-inline constexpr int kStateEncodingSize = 36;
+// State vector length (matches GameState::to_tensor() in Rust).
+inline constexpr int kStateEncodingSize = 217;
 inline constexpr int kDefaultMaxTurns = 1000;
 
 class TrictracGame;
@@ -49,10 +51,11 @@ class TrictracGame;
 // ---------------------------------------------------------------------------
 
 class TrictracState : public State {
- public:
+public:
   explicit TrictracState(std::shared_ptr<const Game> game);
-  // Copy constructor performs a deep-copy of the Rust engine via clone_engine().
-  TrictracState(const TrictracState& other);
+  // Copy constructor performs a deep-copy of the Rust engine via
+  // clone_engine().
+  TrictracState(const TrictracState &other);
 
   Player CurrentPlayer() const override;
   std::vector<Action> LegalActions() const override;
@@ -62,13 +65,14 @@ class TrictracState : public State {
   bool IsTerminal() const override;
   std::vector<double> Returns() const override;
   std::string ObservationString(Player player) const override;
-  void ObservationTensor(Player player, absl::Span<float> values) const override;
+  void ObservationTensor(Player player,
+                         absl::Span<float> values) const override;
   std::unique_ptr<State> Clone() const override;
 
- protected:
+protected:
   void DoApplyAction(Action move_id) override;
 
- private:
+private:
   // Decode a chance-node action index [0,35] to (die1, die2).
   // Matches Python: [(i,j) for i in range(1,7) for j in range(1,7)][action]
   static trictrac_engine::DicePair DecodeChanceAction(Action action);
@@ -79,8 +83,8 @@ class TrictracState : public State {
 // ---------------------------------------------------------------------------
 
 class TrictracGame : public Game {
- public:
-  explicit TrictracGame(const GameParameters& params);
+public:
+  explicit TrictracGame(const GameParameters &params);
 
   int NumDistinctActions() const override { return kNumDistinctActions; }
   std::unique_ptr<State> NewInitialState() const override;
@@ -88,18 +92,19 @@ class TrictracGame : public Game {
   int NumPlayers() const override { return 2; }
   double MinUtility() const override { return -MaxUtility(); }
   double MaxUtility() const override { return 200.0; }
-  // Rough upper bound: chance node + roll action + move per turn, times max turns.
+  // Rough upper bound: chance node + roll action + move per turn, times max
+  // turns.
   int MaxGameLength() const override { return 3 * max_turns_; }
   int MaxChanceNodesInHistory() const override { return MaxGameLength(); }
   std::vector<int> ObservationTensorShape() const override {
     return {kStateEncodingSize};
   }
 
- private:
+private:
   int max_turns_;
 };
 
-}  // namespace trictrac
-}  // namespace open_spiel
+} // namespace trictrac
+} // namespace open_spiel
 
-#endif  // OPEN_SPIEL_GAMES_TRICTRAC_H_
+#endif // OPEN_SPIEL_GAMES_TRICTRAC_H_

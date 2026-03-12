@@ -35,6 +35,8 @@ buildzero_debug:
   cd build && OPEN_SPIEL_BUILD_WITH_LIBTORCH=ON OPEN_SPIEL_BUILD_WITH_LIBNOP=ON CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../open_spiel && make -j$(nproc) alpha_zero_torch_example
 trainzero game:
   ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}}
+trainzeromlp game:
+  ./build/examples/alpha_zero_torch_example --game={{game}} --path=./trainzero/{{game}} --nn_model=mlp --max_simulations=10
 continuetrainzero game:
   ./build/examples/alpha_zero_torch_example ./trainzero/{{game}}/config.json
 playzero game:
